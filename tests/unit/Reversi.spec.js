@@ -55,7 +55,7 @@ describe('Reversi', () => {
       expect(positionCount).to.equal(16)
     })
   })
-  describe('setValueAt', () => {
+  describe('setValueAt (position, value)', () => {
     it('should set the given value', () => {
       const reversi = new Reversi(4, 4)
       //
@@ -64,7 +64,7 @@ describe('Reversi', () => {
       expect(reversi.board[0][0]).to.equal(123)
     })
   })
-  describe('getValueAt', () => {
+  describe('getValueAt (position)', () => {
     it('should get the value', () => {
       const reversi = new Reversi(4, 4)
       reversi.board[0][0] = 123
@@ -74,7 +74,7 @@ describe('Reversi', () => {
       expect(value).to.equal(123)
     })
   })
-  describe('reset()', () => {
+  describe('reset ()', () => {
     it('Should set the next player to dark', () => {
       const reversi = new Reversi()
       reversi.nextTurnPlayer = -999
@@ -94,7 +94,7 @@ describe('Reversi', () => {
       expectBlankOthello4x4(reversi)
     })
   })
-  describe('clearHints()', () => {
+  describe('clearHints ()', () => {
     it('should remove any number\' decimal part', () => {
       const reversi = new Reversi(4, 4)
       for (let position of reversi.positions()) {
@@ -115,7 +115,7 @@ describe('Reversi', () => {
       expectBlankOthello4x4(reversi)
     })
   })
-  describe('prepareHints()', () => {
+  describe('prepareHints ()', () => {
     it('should count the number of possible plays', () => {
       const reversi = new Reversi(4, 4)
       //
@@ -144,7 +144,7 @@ describe('Reversi', () => {
       }
     })
   })
-  describe('isPlayable()', () => {
+  describe('isPlayable (position)', () => {
     it('should return false if the position already has a Disk', () => {
       const reversi = new Reversi(4, 4)
       //
@@ -170,13 +170,13 @@ describe('Reversi', () => {
     })
   })
 
-  describe('isPlayableInDirection (position, direction)', () => {
+  describe('disksToFlipFromPositionInDirection (position, direction)', () => {
     it('should return the possibility of a play in a given position and direction', () => {
       const reversi = new Reversi(4, 4)
       //
       for (let direction of Direction) {
         const isSouth = direction[0] === Direction.south[0] && direction[1] === Direction.south[1]
-        expect(reversi.isPlayableInDirection([0, 1], direction)).to.equal(isSouth)
+        expect(reversi.disksToFlipFromPositionInDirection([0, 1], direction).length > 0).to.equal(isSouth)
       }
     })
   })

@@ -78,6 +78,13 @@ class Reversi {
     }
   }
 
+  /**
+   * Yield every position available in a direction
+   *
+   * @param      {Array}  position   The starting position, will NOT be yielded
+   * @param      {Array}  direction  The direction
+   * @return     {Array}  Every position until the edge of the board.
+   */
   * walkFromPositionInDirection (position, direction) {
     while (true) {
       position = position.map((element, index) => element + direction[index])
@@ -91,32 +98,40 @@ class Reversi {
 
   /**
    * Determines if play is possible in direction.
-   * Returns true if some opponent disk are found until a player disk is found.
+   * Return an array of disks to be flipped by the play.
    *
    * @param      {Array}   position   The position
    * @param      {Array}   direction  The direction
-   * @return     {boolean}  True if the play is possible
+   * @return     {Array}   An array of the opponent disks to be flipped by the play.
    */
-  isPlayableInDirection (position, direction) {
+  disksToFlipFromPositionInDirection (position, direction) {
     let foundOpponentDisk = false
     let opponentDisk = this.nextTurnPlayer * -1
+    const flippedDisks = []
     for (let walkPosition of this.walkFromPositionInDirection(position, direction)) {
       let disk = this.getValueAt(walkPosition)
       if (disk === opponentDisk) {
         foundOpponentDisk = true
+        flippedDisks.push(walkPosition)
       } else if (foundOpponentDisk && disk === this.nextTurnPlayer) {
-        return true
+        return flippedDisks
       } else {
-        return false
+        return []
       }
     }
-    return false
+    return []
   }
 
+  /**
+   * Determines if a play is legal, that is if at least one opponent disk is flipped.
+   *
+   * @param      {Array}   position  The position of the play
+   * @return     {boolean}  True if the play is legal, False otherwise.
+   */
   isPlayable (position) {
     if (this.getValueAt(position) === Disk.empty) {
       for (let direction of Direction) {
-        if (this.isPlayableInDirection(position, direction)) {
+        if (this.disksToFlipFromPositionInDirection(position, direction).length > 0) {
           return true
         }
       }
