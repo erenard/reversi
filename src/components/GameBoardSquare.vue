@@ -1,11 +1,11 @@
 <template>
-  <div
-    class="square"
-    :style="{whiteDisk: state === 1, blackDisk: state === -1}">
+  <div class="square">
     <span>{{ diskChar }}</span>
   </div>
 </template>
 <script>
+import Disk from '../models/Disk'
+
 export default {
   props: {
     rowIndex: {
@@ -23,9 +23,7 @@ export default {
   },
   computed: {
     diskChar () {
-      if (this.state === 1) return 'W'
-      if (this.state === -1) return 'B'
-      return ''
+      return Disk.fromNumber(this.state)
     }
   }
 }
@@ -33,17 +31,16 @@ export default {
 
 <style type="text/css">
 .square {
-  height: 50px;
-  width: 50px;
   border: solid 1px black;
   background-color: rgb(64, 192, 64);
-  float: left;
-  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vmin;
+  height: 10vmin;
 }
-.whiteDisk {
-  background-color: 'white'
-}
-.blackDisk {
-  background-color: 'black'
+.square span {
+  font-size: 7.5vmin;
+  line-height: 0;
 }
 </style>

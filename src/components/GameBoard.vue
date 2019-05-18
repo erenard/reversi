@@ -36,5 +36,7 @@ export default {
 <style type="text/css">
 .game-board-row {
   display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
 }
 </style>
