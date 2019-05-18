@@ -1,5 +1,5 @@
 import Direction from './Direction'
-import Disk from './Disk'
+import Disk, { DiskConstants } from './Disk'
 
 /**
  * The reversi board
@@ -17,7 +17,12 @@ class Reversi {
     this.height = height > 4 ? height : 4
     this.width = width > 4 ? width : 4
     this.board = Array.from(new Array(this.height), row => new Array(this.width))
-    this.nextTurnPlayer = Disk.empty
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        this.board[row][col] = new Disk()
+      }
+    }
+    this.currentPlayerDisk = DiskConstants.empty
     this.reset()
   }
 
@@ -41,7 +46,7 @@ class Reversi {
    * @return     {Number}             The value
    */
   getValueAt (position) {
-    return this.board[position[0]][position[1]]
+    return this.board[position[0]][position[1]].value
   }
 
   /**
@@ -51,28 +56,30 @@ class Reversi {
    * @param      {Number}   value     The value
    */
   setValueAt (position, value) {
-    this.board[position[0]][position[1]] = value
+    this.board[position[0]][position[1]].value = value
   }
 
   /**
    * Reset the board and the next player's turn
    */
   reset () {
-    this.board.forEach(row => row.fill(0))
+    for (const position of this.positions()) {
+      this.setValueAt(position, DiskConstants.empty)
+    }
     const halfHeight = (this.height - 1) / 2
     const halfWidth = (this.width - 1) / 2
-    this.board[Math.floor(halfHeight)][Math.floor(halfWidth)] = Disk.light
-    this.board[Math.floor(halfHeight)][Math.ceil(halfWidth)] = Disk.dark
-    this.board[Math.ceil(halfHeight)][Math.floor(halfWidth)] = Disk.dark
-    this.board[Math.ceil(halfHeight)][Math.ceil(halfWidth)] = Disk.light
-    this.nextTurnPlayer = Disk.dark
+    this.setValueAt([Math.floor(halfHeight), Math.floor(halfWidth)], DiskConstants.light)
+    this.setValueAt([Math.floor(halfHeight), Math.ceil(halfWidth)], DiskConstants.dark)
+    this.setValueAt([Math.ceil(halfHeight), Math.floor(halfWidth)], DiskConstants.dark)
+    this.setValueAt([Math.ceil(halfHeight), Math.ceil(halfWidth)], DiskConstants.light)
+    this.currentPlayerDisk = DiskConstants.dark
   }
 
   /**
    * Removes all hints from the board
    */
   clearHints () {
-    for (let position of this.positions()) {
+    for (const position of this.positions()) {
       const value = this.getValueAt(position)
       this.setValueAt(position, Math.sign(value) * Math.floor(Math.abs(value)))
     }
@@ -106,14 +113,14 @@ class Reversi {
    */
   disksToFlipFromPositionInDirection (position, direction) {
     let foundOpponentDisk = false
-    let opponentDisk = this.nextTurnPlayer * -1
+    let opponentDisk = this.currentPlayerDisk * -1
     const flippedDisks = []
     for (let walkPosition of this.walkFromPositionInDirection(position, direction)) {
       let disk = this.getValueAt(walkPosition)
       if (disk === opponentDisk) {
         foundOpponentDisk = true
         flippedDisks.push(walkPosition)
-      } else if (foundOpponentDisk && disk === this.nextTurnPlayer) {
+      } else if (foundOpponentDisk && disk === this.currentPlayerDisk) {
         return flippedDisks
       } else {
         return []
@@ -129,7 +136,7 @@ class Reversi {
    * @return     {boolean}  True if the play is legal, False otherwise.
    */
   isPlayable (position) {
-    if (this.getValueAt(position) === Disk.empty) {
+    if (this.getValueAt(position) === DiskConstants.empty) {
       for (let direction of Direction) {
         if (this.disksToFlipFromPositionInDirection(position, direction).length > 0) {
           return true
@@ -143,15 +150,41 @@ class Reversi {
    * Add hints to the board
    * @return     {Number}    The hint count
    */
-  prepareHints () {
+  addAndCountHints () {
     let count = 0
-    for (let position of this.positions()) {
+    for (const position of this.positions()) {
       if (this.isPlayable(position)) {
-        this.setValueAt(position, Disk.hint * this.nextTurnPlayer)
+        this.setValueAt(position, DiskConstants.hint * this.currentPlayerDisk)
         count++
       }
     }
     return count
+  }
+
+  play (position) {
+    const takenPositions = [ position ]
+    for (const direction of Direction) {
+      takenPositions.push(...this.disksToFlipFromPositionInDirection(position, direction))
+    }
+    takenPositions.forEach(takenPosition => {
+      this.setValueAt(takenPosition, this.currentPlayerDisk)
+    })
+    this.currentPlayerDisk *= -1
+  }
+
+  prepareNextTurn () {
+    // Remove hints
+    this.clearHints()
+    
+    let hintCount = this.addAndCountHints()
+    if (hintCount === 0) {
+      this.currentPlayerDisk *= -1
+      hintCount = this.addAndCountHints()
+      if (hintCount === 0) {
+        return true
+      }
+    }
+    return false
   }
 }
 

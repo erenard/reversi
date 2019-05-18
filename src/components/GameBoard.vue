@@ -1,17 +1,21 @@
 <template>
   <div>
     <div
-      v-for="(row, rowIndex) in game.board"
+      v-for="rowIndex in height"
       :key="'row' + rowIndex"
       class="game-board-row"
     >
       <game-board-square
-        v-for="(square, columnIndex) in row"
+        v-for="columnIndex in width"
         :key="'square' + rowIndex + '-' + columnIndex"
-        :state="square"
-        @play="handlePlay([rowIndex, columnIndex])"
+        :disk="board[rowIndex - 1][columnIndex - 1]"
+        @play="play([rowIndex - 1, columnIndex - 1])"
       />
     </div>
+    <game-score
+      :score="score"
+      @restart="restart"
+    />
   </div>
 </template>
 
@@ -24,16 +28,39 @@ export default {
     'game-board-square': GameBoardSquare
   },
   data: () => ({
-    game: new Reversi()
+    game: null,
+    score: null
   }),
+  computed: {
+    width () {
+      return this.game ? this.game.width : 0
+    },
+    height () {
+      return this.game ? this.game.height : 0
+    },
+    board () {
+      return this.game ? this.game.board : 0
+    }
+  },
   methods: {
-    handlePlay (position) {
+    play (position) {
+      this.game.clearHints()
       this.game.play(position)
+      this.score = this.game.prepareNextTurn()
+    },
+    restart () {
+      this.game.reset()
+      this.score = this.game.prepareNextTurn()
+    }
+  },
+  watch: {
+    score () {
+
     }
   },
   mounted () {
     this.game = new Reversi()
-    this.game.prepareHints()
+    this.score = this.game.prepareNextTurn()
   }
 }
 </script>

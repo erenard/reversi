@@ -1,33 +1,32 @@
 <template>
-  <div class="square">
-    <span :style="{ opacity: diskAlpha }">
-      {{ diskChar }}
+  <div class="square" @click="handleClick" :class="{ hint: isHint }">
+    <span>
+      {{ disk.char }}
     </span>
   </div>
 </template>
+
 <script>
-import { fromNumber } from '../models/Disk'
+import { DiskConstants } from '../models/Disk'
 
 export default {
   props: {
-    state: {
-      type: Number,
-      default: 0
+    disk: {
+      type: Object,
+      required: true
     }
   },
   computed: {
-    diskChar () {
-      return fromNumber(this.state)
-    },
-    diskAlpha () {
-      return Math.min(Math.abs(this.state), 1)
-    },
-    playable () {
-      return this.diskAlpha < 1
+    isHint () {
+      return Math.abs(this.disk.value) === DiskConstants.hint
     }
   },
-  handlePlay () {
-
+  methods: {
+    handleClick () {
+      if (this.isHint) {
+        this.$emit('play')
+      }
+    }
   }
 }
 </script>
@@ -45,5 +44,11 @@ export default {
 .square span {
   font-size: 7.5vmin;
   line-height: 0;
+}
+.hint {
+  cursor: pointer;
+}
+.hint span {
+  opacity: .5;
 }
 </style>

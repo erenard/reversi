@@ -1,21 +1,21 @@
 import chai from 'chai'
 
 import Reversi from '../../src/models/Reversi'
-import Disk from '../../src/models/Disk'
+import { Disk, DiskConstants } from '../../src/models/Disk'
 import Direction from '../../src/models/Direction'
 
 const expect = chai.expect
 
 function expectBlankOthello4x4 (reversi) {
-  expect(reversi.getValueAt([1, 1])).to.equal(Disk.light)
-  expect(reversi.getValueAt([2, 2])).to.equal(Disk.light)
-  expect(reversi.getValueAt([1, 2])).to.equal(Disk.dark)
-  expect(reversi.getValueAt([2, 1])).to.equal(Disk.dark)
+  expect(reversi.getValueAt([1, 1])).to.equal(DiskConstants.light)
+  expect(reversi.getValueAt([2, 2])).to.equal(DiskConstants.light)
+  expect(reversi.getValueAt([1, 2])).to.equal(DiskConstants.dark)
+  expect(reversi.getValueAt([2, 1])).to.equal(DiskConstants.dark)
   for (let i = 0; i < 4; i++) {
-    expect(reversi.getValueAt([0, i])).to.equal(Disk.empty)
-    expect(reversi.getValueAt([3, i])).to.equal(Disk.empty)
-    expect(reversi.getValueAt([i, 0])).to.equal(Disk.empty)
-    expect(reversi.getValueAt([i, 3])).to.equal(Disk.empty)
+    expect(reversi.getValueAt([0, i])).to.equal(DiskConstants.empty)
+    expect(reversi.getValueAt([3, i])).to.equal(DiskConstants.empty)
+    expect(reversi.getValueAt([i, 0])).to.equal(DiskConstants.empty)
+    expect(reversi.getValueAt([i, 3])).to.equal(DiskConstants.empty)
   }
 }
 
@@ -48,7 +48,7 @@ describe('Reversi', () => {
       const reversi = new Reversi(4, 4)
       let positionCount = 0
       // eslint-disable-next-line
-      for (let position of reversi.positions()) {
+      for (const position of reversi.positions()) {
         positionCount++
       }
       //
@@ -59,33 +59,33 @@ describe('Reversi', () => {
     it('should set the given value', () => {
       const reversi = new Reversi(4, 4)
       //
-      reversi.setValueAt([0, 0], 123)
+      reversi.setValueAt([0, 0], DiskConstants.light)
       //
-      expect(reversi.board[0][0]).to.equal(123)
+      expect(reversi.board[0][0].value).to.equal(DiskConstants.light)
     })
   })
   describe('getValueAt (position)', () => {
     it('should get the value', () => {
       const reversi = new Reversi(4, 4)
-      reversi.board[0][0] = 123
+      reversi.board[0][0].value = DiskConstants.light
       //
       const value = reversi.getValueAt([0, 0])
       //
-      expect(value).to.equal(123)
+      expect(value).to.equal(DiskConstants.light)
     })
   })
   describe('reset ()', () => {
     it('Should set the next player to dark', () => {
       const reversi = new Reversi()
-      reversi.nextTurnPlayer = -999
+      reversi.currentPlayerDisk = DiskConstants.empty
       //
       reversi.reset()
       //
-      expect(reversi.nextTurnPlayer).to.equal(Disk.dark)
+      expect(reversi.currentPlayerDisk).to.equal(DiskConstants.dark)
     })
     it('Prepare the board according to the Othello\'s rules', () => {
       const reversi = new Reversi(4, 4)
-      for (let position of reversi.positions()) {
+      for (const position of reversi.positions()) {
         reversi.setValueAt(position, 1 - (position[0] * 4 + position[1]) % 3)
       }
       //
@@ -97,14 +97,14 @@ describe('Reversi', () => {
   describe('clearHints ()', () => {
     it('should remove any number\' decimal part', () => {
       const reversi = new Reversi(4, 4)
-      for (let position of reversi.positions()) {
+      for (const position of reversi.positions()) {
         reversi.setValueAt(position, 1.98 * Math.random() - 0.99)
       }
       //
       reversi.clearHints()
       //
-      for (let position of reversi.positions()) {
-        expect(reversi.getValueAt(position)).to.equal(Disk.empty)
+      for (const position of reversi.positions()) {
+        expect(reversi.getValueAt(position)).to.equal(DiskConstants.empty)
       }
     })
     it('should keep integer numbers', () => {
@@ -115,17 +115,17 @@ describe('Reversi', () => {
       expectBlankOthello4x4(reversi)
     })
   })
-  describe('prepareHints ()', () => {
+  describe('addAndCountHints ()', () => {
     it('should count the number of possible plays', () => {
       const reversi = new Reversi(4, 4)
       //
-      const value = reversi.prepareHints()
+      const value = reversi.addAndCountHints()
       //
       expect(value).to.equal(4)
     })
     it('should add an hint to the board for possible plays only', () => {
       const reversi = new Reversi()
-      reversi.nextTurnPlayer = Disk.light
+      reversi.currentPlayerDisk = DiskConstants.light
       const expectedHints = [
         [2, 4],
         [3, 5],
@@ -133,13 +133,13 @@ describe('Reversi', () => {
         [5, 3]
       ]
       //
-      reversi.prepareHints()
+      reversi.addAndCountHints()
       //
       for (const position of reversi.positions()) {
         if (expectedHints.some(expectedHint => expectedHint[0] === position[0] && expectedHint[1] === position[1])) {
-          expect(reversi.getValueAt(position)).to.equal(reversi.nextTurnPlayer * Disk.hint)
+          expect(reversi.getValueAt(position)).to.equal(reversi.currentPlayerDisk * DiskConstants.hint)
         } else {
-          expect(reversi.getValueAt(position)).not.to.equal(reversi.nextTurnPlayer * Disk.hint)
+          expect(reversi.getValueAt(position)).not.to.equal(reversi.currentPlayerDisk * DiskConstants.hint)
         }
       }
     })
@@ -164,7 +164,7 @@ describe('Reversi', () => {
         [3, 3]
       ]
       //
-      for (let position of reversi.walkFromPositionInDirection([0, 0], Direction.southEast)) {
+      for (const position of reversi.walkFromPositionInDirection([0, 0], Direction.southEast)) {
         expect(position).to.deep.equal(expectedPositions[index++])
       }
     })
