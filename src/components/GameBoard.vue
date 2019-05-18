@@ -1,38 +1,43 @@
 <template>
   <div>
-    <div v-for="rowIndex in rows" :key="rowIndex" class="game-board-row">
+    <div
+      v-for="(row, rowIndex) in game.board"
+      :key="'row' + rowIndex"
+      class="game-board-row"
+    >
       <game-board-square
-        v-for="columnIndex in columns"
-        :key="columnIndex"
-        :rowIndex="rowIndex"
-        :columnIndex="columnIndex"
-        :state="((columnIndex + rowIndex) % 3) - 1"
-        @play="handlePlay(rowIndex, columnIndex)"
+        v-for="(square, columnIndex) in row"
+        :key="'square' + rowIndex + '-' + columnIndex"
+        :state="square"
+        @play="handlePlay([rowIndex, columnIndex])"
       />
     </div>
   </div>
 </template>
+
 <script>
 import GameBoardSquare from './GameBoardSquare.vue'
+import Reversi from '../models/Reversi'
 
 export default {
   components: {
     'game-board-square': GameBoardSquare
   },
-  props: {
-    rows: {
-      type: Number,
-      required: true
-    },
-    columns: {
-      type: Number,
-      required: true
+  data: () => ({
+    game: new Reversi()
+  }),
+  methods: {
+    handlePlay (position) {
+      this.game.play(position)
     }
   },
-  data: () => ({
-  })
+  mounted () {
+    this.game = new Reversi()
+    this.game.prepareHints()
+  }
 }
 </script>
+
 <style type="text/css">
 .game-board-row {
   display: flex;

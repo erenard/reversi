@@ -1,21 +1,15 @@
 <template>
   <div class="square">
-    <span>{{ diskChar }}</span>
+    <span :style="{ opacity: diskAlpha }">
+      {{ diskChar }}
+    </span>
   </div>
 </template>
 <script>
-import Disk from '../models/Disk'
+import { fromNumber } from '../models/Disk'
 
 export default {
   props: {
-    rowIndex: {
-      type: Number,
-      required: true
-    },
-    columnIndex: {
-      type: Number,
-      required: true
-    },
     state: {
       type: Number,
       default: 0
@@ -23,15 +17,24 @@ export default {
   },
   computed: {
     diskChar () {
-      return Disk.fromNumber(this.state)
+      return fromNumber(this.state)
+    },
+    diskAlpha () {
+      return Math.min(Math.abs(this.state), 1)
+    },
+    playable () {
+      return this.diskAlpha < 1
     }
+  },
+  handlePlay () {
+
   }
 }
 </script>
 
 <style type="text/css">
 .square {
-  border: solid 1px black;
+  border: solid .25vmin black;
   background-color: rgb(64, 192, 64);
   display: flex;
   justify-content: center;
