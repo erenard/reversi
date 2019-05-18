@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="rowIndex in rows" :key="rowIndex">
+    <div v-for="rowIndex in rows" :key="rowIndex" class="game-board-row">
       <game-board-square
         v-for="columnIndex in columns"
         :key="columnIndex"
@@ -34,5 +34,7 @@ export default {
 }
 </script>
 <style type="text/css">
-  
+.game-board-row {
+  display: flex;
+}
 </style>
