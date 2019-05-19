@@ -34,11 +34,15 @@ jobs:
       - run:
           name: clone gh-pages into dist
           command: git clone https://github.com/erenard/reversi.git --branch gh-pages
-          working_directory: ~/erenard/reversi/dist
+          working_directory: ./dist
       - run:
-          name: Check branch of dist
+          name: Check branch of ~/erenard/reversi/dist
           command: git status
           working_directory: ~/erenard/reversi/dist
+      - run:
+          name: Check branch of ./dist
+          command: git status
+          working_directory: ./dist
       - run: npm run build
       - run:
           name: Check branch of dist
