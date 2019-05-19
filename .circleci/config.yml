@@ -31,16 +31,6 @@ jobs:
       - run: export PATH="~/erenard/reversi/node_modules/.bin:$PATH"
       # run tests!
       - run: npm run test:unit
-      - run: git clone https://github.com/erenard/reversi.git --branch gh-pages dist
-      - run:
-          name: test working directory
-          command: git status
-          working_directory: ~/erenard/reversi/dist
-      - run: npm run build
-      - run:
-          name: test working directory
-          command: git status
-          working_directory: ~/erenard/reversi/dist
       - run: git config --global -l #<= totally unnecessary, but "fixes" problem?
       - run:
           name: test working directory
@@ -59,6 +49,16 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
+      - run:
+          name: test working directory
+          command: git status
+          working_directory: ~/erenard/reversi/dist
+      - run: git clone https://github.com/erenard/reversi.git --branch gh-pages dist
+      - run:
+          name: test working directory
+          command: git status
+          working_directory: ~/erenard/reversi/dist
+      - run: npm run build
       - run:
           name: test working directory
           command: git status
