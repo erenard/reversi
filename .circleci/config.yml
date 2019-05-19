@@ -39,8 +39,7 @@ jobs:
       # run tests!
       - run: npm run test:unit
       - run: npm run build
-    working_directory: ~/erenard/reversi/dist
-      - run: ls -a
+      - run: cd dist & ls -a
       # - run: git add --all
       # - run: git commit -m "Release at $(date)"
       # - run: git push
