@@ -175,16 +175,46 @@ class Reversi {
   prepareNextTurn () {
     // Remove hints
     this.clearHints()
-    
+
     let hintCount = this.addAndCountHints()
     if (hintCount === 0) {
+      // Current player pass
       this.currentPlayerDisk *= -1
       hintCount = this.addAndCountHints()
       if (hintCount === 0) {
-        return true
+        // Nobody can play, game over
+        this.currentPlayerDisk = DiskConstants.empty
       }
     }
-    return false
+
+    let darkScore = 0
+    let lightScore = 0
+
+    for (const position of this.positions()) {
+      const value = this.getValueAt(position)
+      if (value === DiskConstants.light) {
+        lightScore++
+      } else if (value === DiskConstants.dark) {
+        darkScore++
+      }
+    }
+
+    let winner
+
+    if (darkScore > lightScore) {
+      winner = Disk.dark
+    } else if (darkScore < lightScore) {
+      winner = Disk.light
+    } else {
+      winner = Disk.empty
+    }
+
+    return {
+      lightScore,
+      darkScore,
+      currentPlayerDisk: this.currentPlayerDisk,
+      winner
+    }
   }
 }
 

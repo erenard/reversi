@@ -1,17 +1,16 @@
 <template>
   <div id="app">
-    <GameBoard :rows="8" :columns="8" />
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+    <Reversi />
   </div>
 </template>
 
 <script>
-import GameBoard from './components/GameBoard.vue'
+import Reversi from './components/Reversi.vue'
 
 export default {
   name: 'app',
   components: {
-    GameBoard
+    Reversi
   }
 }
 </script>
@@ -29,10 +28,7 @@ html, body {
   width: 100%;
 }
 #app {
-  display: flex;
   height: 100%;
   width: 100%;
-  justify-content: center;
-  align-items: center;
 }
 </style>

@@ -5,32 +5,29 @@
       :key="'row' + rowIndex"
       class="game-board-row"
     >
-      <game-board-square
+      <GameBoardSquare
         v-for="columnIndex in width"
         :key="'square' + rowIndex + '-' + columnIndex"
         :disk="board[rowIndex - 1][columnIndex - 1]"
         @play="play([rowIndex - 1, columnIndex - 1])"
       />
     </div>
-    <game-score
-      :score="score"
-      @restart="restart"
-    />
   </div>
 </template>
 
 <script>
 import GameBoardSquare from './GameBoardSquare.vue'
-import Reversi from '../models/Reversi'
 
 export default {
   components: {
-    'game-board-square': GameBoardSquare
+    GameBoardSquare
   },
-  data: () => ({
-    game: null,
-    score: null
-  }),
+  props: {
+    game: {
+      type: Object,
+      default: () => null
+    }
+  },
   computed: {
     width () {
       return this.game ? this.game.width : 0
@@ -44,23 +41,8 @@ export default {
   },
   methods: {
     play (position) {
-      this.game.clearHints()
-      this.game.play(position)
-      this.score = this.game.prepareNextTurn()
-    },
-    restart () {
-      this.game.reset()
-      this.score = this.game.prepareNextTurn()
+      this.$emit('play', position)
     }
-  },
-  watch: {
-    score () {
-
-    }
-  },
-  mounted () {
-    this.game = new Reversi()
-    this.score = this.game.prepareNextTurn()
   }
 }
 </script>
