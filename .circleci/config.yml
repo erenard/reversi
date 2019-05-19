@@ -39,7 +39,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
-      - run: ./.circleci/deploy.sh
+      - run: deploy.sh
 
       # - run:
       #     name: Check branch of ~/erenard/reversi/dist
