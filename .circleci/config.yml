@@ -40,6 +40,7 @@ jobs:
       - run: npm run test:unit
       - run: npm run build
       - run: cd dist && ls -a
+      - run: cd dist && git status
       - run: cd dist && git add --all
       - run: cd dist && git commit -m "Release at $(date)"
       - run: cd dist && git push
