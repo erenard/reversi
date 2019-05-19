@@ -29,20 +29,14 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: export PATH="~/erenard/reversi/node_modules/.bin:$PATH"
+      # run tests!
+      - run: npm run test:unit
+      - run: git clone https://github.com/erenard/reversi.git --branch gh-pages dist
+      - run: npm run build
       - run: git config --global -l #<= totally unnecessary, but "fixes" problem?
       - run: git config --global user.email circleci@circleci
       - run: git config --global user.name CircleCI
       - add_ssh_keys:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
-      - run: git clone https://github.com/erenard/reversi.git --branch gh-pages dist
-      # run tests!
-      - run: npm run test:unit
-      - run: npm run build
       - run: npm run deploy
-      # - run: cd dist && ls -a
-      # - run: cd dist && git status
-      # - run: cd dist && git add --all
-      # - run: cd dist && git commit -m "Release at $(date)"
-      # - run: cd dist && git push
-      # git push -f git@github.com:erenard/reversi.git master:gh-pages
