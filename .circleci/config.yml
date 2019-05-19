@@ -40,6 +40,6 @@ jobs:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
       - run:
-        name: test working directory
-        command: git status
-        working_directory: dist
+          name: test working directory
+          command: git status
+          working_directory: ~/erenard/reversi/dist
