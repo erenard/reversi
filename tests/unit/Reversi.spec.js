@@ -1,7 +1,7 @@
 import chai from 'chai'
 
 import Reversi from '../../src/models/Reversi'
-import { Disk, DiskConstants } from '../../src/models/Disk'
+import { DiskConstants } from '../../src/models/Disk'
 import Direction from '../../src/models/Direction'
 
 const expect = chai.expect
