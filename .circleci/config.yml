@@ -40,7 +40,7 @@ jobs:
       - run: npm run test:unit
       - run: npm run build
       - run: cd dist && ls -a
-      # - run: git add --all
-      # - run: git commit -m "Release at $(date)"
-      # - run: git push
+      - run: cd dist && git add --all
+      - run: cd dist && git commit -m "Release at $(date)"
+      - run: cd dist && git push
       # git push -f git@github.com:erenard/reversi.git master:gh-pages
