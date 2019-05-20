@@ -1,8 +1,13 @@
 <template>
   <div
-    v-if="score.winner"
+    v-if="isGameOver"
     class="floating-container">
-    <div class="game-over-modal">Game Over</div>
+    <div class="game-over-modal">
+      <div>Game Over</div>
+      <div v-if="isDraw">Draw</div>
+      <div v-else>{{ game.winner.char }}</div>
+      <div>{{ game.score.light }} - {{ game.score.dark }}</div>
+    </div>
   </div>
 </template>
 
@@ -10,17 +15,18 @@
 import { DiskConstants } from '../models/Disk'
 
 export default {
-  data: () => ({
-    empty: DiskConstants.empty
-  }),
   props: {
-    score: {
+    game: {
       type: Object,
-      default: () => ({
-        winner: null,
-        lightScore: 0,
-        darkScore: 0
-      })
+      default: () => null
+    }
+  },
+  computed: {
+    isGameOver () {
+      return this.game && this.game.currentPlayerDisk === DiskConstants.empty
+    },
+    isDraw () {
+      return this.game && this.game.winner.value === DiskConstants.empty
     }
   }
 }
@@ -31,10 +37,15 @@ export default {
   position: absolute;
 }
 .game-over-modal {
-  border: solid 5px black;
-  box-shadow: 5px;
-  background-color: rga(64, 192, 64);
-  width: 50vmin;
-  height: 50vmin;
+  border: solid 1vmin black;
+  box-shadow: 1vmin;
+  background-color: rgb(64, 192, 64);
+  display: flex;
+  flex-flow: column;
+}
+.game-over-modal div {
+  font-size: 10vmin;
+  padding: 3vmin;
+  text-align: center;
 }
 </style>

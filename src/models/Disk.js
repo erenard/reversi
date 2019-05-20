@@ -9,8 +9,8 @@ export const DiskConstants = {
 }
 
 class Disk {
-  constructor () {
-    this.value = 0
+  constructor (value = 0) {
+    this.value = value
   }
 
   get char () {

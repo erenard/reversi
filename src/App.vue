@@ -17,7 +17,7 @@ export default {
 
 <style>
 html {
-  background: url(assets/bg.jpg) no-repeat center fixed; 
+  background: url(assets/bg.jpg) no-repeat center fixed;
   -webkit-background-size: cover;
   background-size: cover;
 }

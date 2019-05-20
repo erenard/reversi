@@ -5,7 +5,7 @@
       @play="play"
     />
     <GameOver
-      :score="score"
+      :game="game"
       @restart="restart"
     />
   </div>
@@ -15,7 +15,6 @@
 import GameBoard from './GameBoard.vue'
 import GameOver from './GameOver.vue'
 import Reversi from '../models/Reversi'
-import DiskConstants from '../models/DiskConstants'
 
 export default {
   components: {
@@ -23,29 +22,21 @@ export default {
     GameOver
   },
   data: () => ({
-    game: undefined,
-    disk: undefined,
-    score: undefined
+    game: undefined
   }),
   methods: {
     play (position) {
-      this.game.clearHints()
       this.game.play(position)
-      this.disk = this.game.prepareNextTurn()
-      // TODO
-      if (this.disk === DiskConstants.empty) {
-        this.score = this.game.countScore()
-      }
+      this.game.prepareNextTurn()
     },
     restart () {
       this.game.reset()
-      this.disk = this.game.prepareNextTurn()
+      this.game.prepareNextTurn()
     }
   },
   mounted () {
     this.game = new Reversi()
-    this.disk = this.game.prepareNextTurn()
-    this.score = this.game.countScore()
+    this.game.prepareNextTurn()
   }
 }
 </script>

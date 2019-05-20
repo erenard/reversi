@@ -206,12 +206,12 @@ describe('Reversi', () => {
       const reversi = new Reversi()
       reversi.setValueAt([0, 0], DiskConstants.dark)
       //
-      expect(reversi.winner).to.equal(DiskConstants.dark)
+      expect(reversi.winner.value).to.equal(DiskConstants.dark)
     })
     it('should return the winner to DiskConstants.empty if its a draw', () => {
       const reversi = new Reversi()
       //
-      expect(reversi.winner).to.equal(DiskConstants.empty)
+      expect(reversi.winner.value).to.equal(DiskConstants.empty)
     })
   })
 

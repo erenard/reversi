@@ -216,7 +216,7 @@ class Reversi {
       winner = DiskConstants.light
     }
 
-    return winner
+    return new Disk(winner)
   }
 
   /**
