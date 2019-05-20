@@ -2,7 +2,10 @@
   <div
     v-if="isGameOver"
     class="floating-container">
-    <div class="game-over-modal">
+    <div
+      class="game-over-modal"
+      @click="handleClick"
+    >
       <div>Game Over</div>
       <div v-if="isDraw">Draw</div>
       <div v-else>{{ game.winner.char }} wins !</div>
@@ -28,6 +31,11 @@ export default {
     isDraw () {
       return this.game && this.game.winner.value === DiskConstants.empty
     }
+  },
+  methods: {
+    handleClick () {
+      this.$emit('restart')
+    }
   }
 }
 </script>
@@ -42,6 +50,7 @@ export default {
   background-color: rgb(64, 192, 64);
   display: flex;
   flex-flow: column;
+  cursor: pointer;
 }
 .game-over-modal div {
   font-size: 10vmin;
