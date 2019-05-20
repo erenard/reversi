@@ -161,6 +161,11 @@ class Reversi {
     return count
   }
 
+  /**
+   * Execute a play at the given position
+   *
+   * @param      {Array}  position  The position to be played
+   */
   play (position) {
     const takenPositions = [ position ]
     for (const direction of Direction) {
@@ -172,6 +177,44 @@ class Reversi {
     this.currentPlayerDisk *= -1
   }
 
+  /**
+   * Counts the score of each Disk color.
+   *
+   * @return     {Object}  Dark disk count, light disk count and winner.
+   */
+  countScore () {
+    let dark = 0
+    let light = 0
+
+    for (const position of this.positions()) {
+      const value = this.getValueAt(position)
+      if (value === DiskConstants.light) {
+        light++
+      } else if (value === DiskConstants.dark) {
+        dark++
+      }
+    }
+
+    let winner = DiskConstants.empty
+
+    if (dark > light) {
+      winner = DiskConstants.dark
+    } else if (dark < light) {
+      winner = DiskConstants.light
+    }
+
+    return {
+      light,
+      dark,
+      winner
+    }
+  }
+
+  /**
+   * Remove the previous hints, determine the next Disk playing, the score and the end of the game
+   *
+   * @return     {Number}  The Disk color value for the next playing disks.
+   */
   prepareNextTurn () {
     // Remove hints
     this.clearHints()
@@ -187,34 +230,7 @@ class Reversi {
       }
     }
 
-    let darkScore = 0
-    let lightScore = 0
-
-    for (const position of this.positions()) {
-      const value = this.getValueAt(position)
-      if (value === DiskConstants.light) {
-        lightScore++
-      } else if (value === DiskConstants.dark) {
-        darkScore++
-      }
-    }
-
-    let winner
-
-    if (darkScore > lightScore) {
-      winner = Disk.dark
-    } else if (darkScore < lightScore) {
-      winner = Disk.light
-    } else {
-      winner = Disk.empty
-    }
-
-    return {
-      lightScore,
-      darkScore,
-      currentPlayerDisk: this.currentPlayerDisk,
-      winner
-    }
+    return this.currentPlayerDisk
   }
 }
 

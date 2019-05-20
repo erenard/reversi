@@ -180,4 +180,96 @@ describe('Reversi', () => {
       }
     })
   })
+
+  describe('countScore', () => {
+    it('should return the number of disks fore each disk color', () => {
+      const reversi = new Reversi()
+      reversi.setValueAt([0, 0], DiskConstants.dark)
+      //
+      const score = reversi.countScore()
+      //
+      expect(score.dark).to.equal(3)
+      expect(score.light).to.equal(2)
+      expect(score.winner).to.equal(DiskConstants.dark)
+    })
+    it('should return the winner to DiskConstants.empty if its a draw', () => {
+      const reversi = new Reversi()
+      //
+      const score = reversi.countScore()
+      //
+      expect(score.dark).to.equal(2)
+      expect(score.light).to.equal(2)
+      expect(score.winner).to.equal(DiskConstants.empty)
+    })
+  })
+
+  describe('prepareNextTurn ()', () => {
+    it('should return the next player if a play is possible', () => {
+      const reversi = new Reversi()
+      //
+      const nextTurn = reversi.prepareNextTurn()
+      //
+      expect(nextTurn).to.equal(DiskConstants.dark)
+    })
+    it('should return the next player\'s opponent if the next player can\'t play', () => {
+      const reversi = new Reversi(4, 4)
+      reversi.setValueAt([1, 1], DiskConstants.empty)
+      reversi.setValueAt([2, 2], DiskConstants.empty)
+      reversi.setValueAt([2, 1], DiskConstants.empty)
+      reversi.setValueAt([1, 2], DiskConstants.empty)
+      // The dark player can't play
+      reversi.setValueAt([0, 0], DiskConstants.light)
+      reversi.setValueAt([0, 1], DiskConstants.dark)
+      //
+      const nextTurn = reversi.prepareNextTurn()
+      //
+      expect(nextTurn).to.equal(DiskConstants.light)
+    })
+    it('should return the DiskConstants.empty if the board is full', () => {
+      const reversi = new Reversi(4, 4)
+      for (const position of reversi.positions()) {
+        reversi.setValueAt(position, DiskConstants.dark)
+      }
+      //
+      const nextTurn = reversi.prepareNextTurn()
+      //
+      expect(nextTurn).to.equal(DiskConstants.empty)
+    })
+    it('should return the DiskConstants.empty if nobody can play', () => {
+      const reversi = new Reversi(4, 4)
+      reversi.setValueAt([1, 1], DiskConstants.light)
+      reversi.setValueAt([2, 2], DiskConstants.light)
+      reversi.setValueAt([2, 1], DiskConstants.light)
+      reversi.setValueAt([1, 2], DiskConstants.light)
+      // Nobody can play
+      //
+      const nextTurn = reversi.prepareNextTurn()
+      //
+      expect(nextTurn).to.equal(DiskConstants.empty)
+    })
+  })
+
+  describe('play (position)', () => {
+    it('should add a disk at the given position', () => {
+      const reversi = new Reversi(4, 4)
+      //
+      reversi.play([0, 0])
+      //
+      expect(reversi.getValueAt([0, 0])).to.equal(DiskConstants.dark)
+    })
+    it('should change the Disk color for the next turn', () => {
+      const reversi = new Reversi(4, 4)
+      //
+      reversi.play([0, 0])
+      //
+      expect(reversi.currentPlayerDisk).to.equal(DiskConstants.light)
+    })
+    it('should flip the opponent Disks', () => {
+      const reversi = new Reversi()
+      //
+      reversi.play([2, 3])
+      //
+      expect(reversi.getValueAt([3, 3])).to.equal(DiskConstants.dark)
+    })
+  })
 })
