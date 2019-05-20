@@ -182,7 +182,7 @@ class Reversi {
    *
    * @return     {Object}  Dark disk count, light disk count and winner.
    */
-  countScore () {
+  get score () {
     let dark = 0
     let light = 0
 
@@ -195,6 +195,19 @@ class Reversi {
       }
     }
 
+    return {
+      light,
+      dark
+    }
+  }
+
+  /**
+   * The disks winning the game.
+   *
+   * @return     {Number}  Disk value of the winners, empty in case of draw.
+   */
+  get winner () {
+    let { dark, light } = this.score
     let winner = DiskConstants.empty
 
     if (dark > light) {
@@ -203,11 +216,7 @@ class Reversi {
       winner = DiskConstants.light
     }
 
-    return {
-      light,
-      dark,
-      winner
-    }
+    return winner
   }
 
   /**

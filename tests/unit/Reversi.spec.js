@@ -181,25 +181,37 @@ describe('Reversi', () => {
     })
   })
 
-  describe('countScore', () => {
+  describe('get score', () => {
     it('should return the number of disks fore each disk color', () => {
       const reversi = new Reversi()
       reversi.setValueAt([0, 0], DiskConstants.dark)
       //
-      const score = reversi.countScore()
+      const score = reversi.score
       //
       expect(score.dark).to.equal(3)
       expect(score.light).to.equal(2)
-      expect(score.winner).to.equal(DiskConstants.dark)
     })
     it('should return the winner to DiskConstants.empty if its a draw', () => {
       const reversi = new Reversi()
       //
-      const score = reversi.countScore()
+      const score = reversi.score
       //
       expect(score.dark).to.equal(2)
       expect(score.light).to.equal(2)
-      expect(score.winner).to.equal(DiskConstants.empty)
+    })
+  })
+
+  describe('get winner', () => {
+    it('should return the winning disks\' color', () => {
+      const reversi = new Reversi()
+      reversi.setValueAt([0, 0], DiskConstants.dark)
+      //
+      expect(reversi.winner).to.equal(DiskConstants.dark)
+    })
+    it('should return the winner to DiskConstants.empty if its a draw', () => {
+      const reversi = new Reversi()
+      //
+      expect(reversi.winner).to.equal(DiskConstants.empty)
     })
   })
 
