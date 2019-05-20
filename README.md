@@ -1,4 +1,8 @@
-# reversi
+[![CircleCI](https://circleci.com/gh/erenard/reversi.svg?style=svg)](https://circleci.com/gh/erenard/reversi/tree/master)
+[![Live demo](https://img.shields.io/badge/live-demo-800080.svg)](https://erenard.github.io/reversi/)
+
+# Reversi
+A reversi game made with [vue](https://github.com/vuejs/vue) and [vue-cli](https://github.com/vuejs/vue-cli)
 
 ## Project setup
 ```

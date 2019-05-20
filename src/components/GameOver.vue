@@ -5,7 +5,7 @@
     <div class="game-over-modal">
       <div>Game Over</div>
       <div v-if="isDraw">Draw</div>
-      <div v-else>{{ game.winner.char }}</div>
+      <div v-else>{{ game.winner.char }} wins !</div>
       <div>{{ game.score.light }} - {{ game.score.dark }}</div>
     </div>
   </div>
