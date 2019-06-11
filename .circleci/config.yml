@@ -14,6 +14,8 @@ jobs:
     branches:
       only:
         - master
+      ignore:
+        - gh-pages
     steps:
       - checkout
       - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
