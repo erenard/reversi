@@ -40,26 +40,11 @@ jobs:
       - run: npm run build
       - run: cp -R .circleci dist
       - run: 
-          command: git init
           working_directory: ~/erenard/reversi/dist
-      - run:
-          name: Check branch of ~/erenard/reversi/dist
-          command: git status
-          working_directory: ~/erenard/reversi/dist
-      - run:
-          command: git add --all
-          working_directory: ~/erenard/reversi/dist
-      - run:
-          name: Check branch of ~/erenard/reversi/dist
-          command: git status
-          working_directory: ~/erenard/reversi/dist
-      - run:
-          command: git commit -m "Release at {{ queued_at }}"
-          working_directory: ~/erenard/reversi/dist
-      - run:
-          name: Check branch of ~/erenard/reversi/dist
-          command: git status
-          working_directory: ~/erenard/reversi/dist
-
-
-      # - run: npm run deploy
+          command: |
+            git init
+            git add --all
+            git commit -m "Release at $(date)"
+      # - run:
+      #     command: git push -f git@github.com:erenard/reversi.git master:gh-pages
+      #     working_directory: ~/erenard/reversi/dist
