@@ -29,22 +29,24 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      # run tests!
+      # Test
       - run: npm run test:unit
-      - run: git config --global -l #<= totally unnecessary, but "fixes" problem?
-      - run: git config --global user.email circleci@circleci
-      - run: git config --global user.name CircleCI
+      # Build
+      - run: npm run build
+      # Deploy
       - add_ssh_keys:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
-      - run: npm run build
-      - run: cp -R .circleci dist
-      - run: 
+      - run:
+          name: Prevent building the gh-pages branche
+          command: cp -R .circleci dist
+      - run:
           working_directory: ~/erenard/reversi/dist
           command: |
+            git config --global -l
+            git config --global user.email circleci@circleci
+            git config --global user.name CircleCI
             git init
             git add --all
             git commit -m "Release at $(date)"
-      # - run:
-      #     command: git push -f git@github.com:erenard/reversi.git master:gh-pages
-      #     working_directory: ~/erenard/reversi/dist
+            git push -f git@github.com:erenard/reversi.git master:gh-pages
