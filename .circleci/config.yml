@@ -1,0 +1,52 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    working_directory: ~/erenard/reversi
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    docker:
+      - image: circleci/node:8-browsers
+    branches:
+      only:
+        - master
+    steps:
+      - checkout
+      - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: export PATH="~/erenard/reversi/node_modules/.bin:$PATH"
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      # Test
+      - run: npm run test:unit
+      # Build
+      - run: npm run build
+      # Deploy
+      - add_ssh_keys:
+          fingerprints:
+            - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
+      - run:
+          name: Prevent building the gh-pages branche
+          command: cp -R .circleci dist
+      - run:
+          working_directory: ~/erenard/reversi/dist
+          command: |
+            git config --global -l
+            git config --global user.email circleci@circleci
+            git config --global user.name CircleCI
+            git init
+            git add --all
+            git commit -m "Release at $(date)"
+            git push -f git@github.com:erenard/reversi.git master:gh-pages
