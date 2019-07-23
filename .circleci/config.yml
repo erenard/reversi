@@ -37,8 +37,8 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "00:4f:8a:aa:1c:9e:03:b5:d5:44:69:71:53:31:f3:8b"
+      - run: npm run build
       - run: cp -R .circleci dist
-      - run: cd dist
       - run: 
           command: git init
           working_directory: ~/erenard/reversi/dist
