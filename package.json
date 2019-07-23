@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "deploy": "git clone https://github.com/erenard/mandelbrot.git --branch gh-pages dist && vue-cli-service build && cd dist && git init && git add --all && git commit -m \"Release at $(date)\" && git push -f git@github.com:erenard/reversi.git master:gh-pages"
+    "deploy": "cd dist && git init && git add --all && git commit -m \"Release at $(date)\" && git push -f git@github.com:erenard/reversi.git master:gh-pages"
   },
   "dependencies": {
     "core-js": "^2.6.9",
