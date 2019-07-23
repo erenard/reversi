@@ -54,7 +54,7 @@ jobs:
           command: git status
           working_directory: ~/erenard/reversi/dist
       - run:
-          command: git commit -m \"Release at $(date)\"
+          command: git commit -m "Release at {{ queued_at }}"
           working_directory: ~/erenard/reversi/dist
       - run:
           name: Check branch of ~/erenard/reversi/dist
